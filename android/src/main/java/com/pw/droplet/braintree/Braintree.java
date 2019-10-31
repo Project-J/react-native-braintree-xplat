@@ -26,6 +26,8 @@ import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.interfaces.BraintreeErrorListener;
 import com.braintreepayments.api.models.CardNonce;
+import com.braintreepayments.api.DataCollector;
+import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -262,6 +264,27 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
         this.successCallback = successCallback;
         this.errorCallback = errorCallback;
         PayPal.authorizeAccount(this.mBraintreeFragment);
+    }
+
+    @ReactMethod
+    public void getDeviceData(final ReadableMap options, final Callback successCallback) {
+        if (options.hasKey("merchantId")) {
+          String merchantId = options.getString("merchantId"); 
+            DataCollector.collectDeviceData(this.mBraintreeFragment, merchantId, new BraintreeResponseListener<String>() {
+                @Override
+                public void onResponse(String deviceData) {
+                    successCallback.invoke(null, deviceData);
+                }
+            });
+
+        } else {
+            DataCollector.collectDeviceData(this.mBraintreeFragment, new BraintreeResponseListener<String>() {
+                @Override
+                public void onResponse(String deviceData) {
+                    successCallback.invoke(null, deviceData);
+                }
+            });
+        }
     }
 
     @Override

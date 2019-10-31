@@ -162,6 +162,7 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
         NSString *deviceData = nil;
         NSString *environment = options[@"environment"];
         NSString *dataSelector = options[@"dataCollector"];
+        NSString *merchantId = options[@"merchantId"];
         
         //Initialize the data collector and specify environment
         if([environment isEqualToString: @"development"]){
@@ -173,6 +174,11 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
         } else if([environment isEqualToString: @"sandbox"]){
             self.dataCollector = [[BTDataCollector alloc]
                                   initWithEnvironment:BTDataCollectorEnvironmentSandbox];
+        }
+
+        if (merchantId != nil ) {
+            NSLog(@"Setting merchant id: %@", merchantId);
+            [self.dataCollector setFraudMerchantId:merchantId];
         }
         
         //Data collection methods
