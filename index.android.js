@@ -22,6 +22,14 @@ module.exports = {
     });
   },
 
+  getDeviceData(options = {}) {
+    return new Promise(function(resolve, reject) {
+        Braintree.getDeviceData(options, function(err, deviceData) {
+            deviceData != null ? resolve(deviceData): reject(err);
+        });
+    });
+  },
+
   showPaymentViewController(config = {}) {
     var options = {
       callToActionText: config.callToActionText,
