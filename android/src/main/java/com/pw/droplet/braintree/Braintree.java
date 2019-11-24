@@ -5,12 +5,16 @@ import java.util.HashMap;
 
 import android.util.Log;
 
+import android.net.Uri;
+
 import com.braintreepayments.api.interfaces.BraintreeCancelListener;
+import com.braintreepayments.api.interfaces.ConfigurationListener;
 import com.google.gson.Gson;
 
 import android.content.Intent;
 import android.content.Context;
 import android.app.Activity;
+
 
 import com.braintreepayments.api.ThreeDSecure;
 import com.braintreepayments.api.PaymentRequest;
@@ -28,6 +32,7 @@ import com.braintreepayments.api.interfaces.BraintreeErrorListener;
 import com.braintreepayments.api.models.CardNonce;
 import com.braintreepayments.api.DataCollector;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
+import com.braintreepayments.api.models.Configuration;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -36,12 +41,19 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.ReadableMap;
 
-public class Braintree extends ReactContextBaseJavaModule implements ActivityEventListener {
+
+public class Braintree extends ReactContextBaseJavaModule implements ActivityEventListener, ConfigurationListener {
     private static final int PAYMENT_REQUEST = 1706816330;
+    private static final int DEVICEID_REQUEST = 185392392;
     private String token;
 
     private Callback successCallback;
     private Callback errorCallback;
+
+
+    private Callback deviceDataCallback;
+
+    private Boolean collectDeviceData = false;
 
     private Context mActivityContext;
 
@@ -69,8 +81,10 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
 
     @ReactMethod
     public void setup(final String token, final Callback successCallback, final Callback errorCallback) {
+        Log.d("Fragment setup", token);
         try {
             this.mBraintreeFragment = BraintreeFragment.newInstance(getCurrentActivity(), token);
+
             this.mBraintreeFragment.addListener(new BraintreeCancelListener() {
                 @Override
                 public void onCancel(int requestCode) {
@@ -99,12 +113,12 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
                 public void onError(Exception error) {
                     Gson gson = new Gson();
 
+                    Log.d("Errors", gson.toJson(error));
                     if (error instanceof ErrorWithResponse) {
                         ErrorWithResponse errorWithResponse = (ErrorWithResponse) error;
                         BraintreeError cardErrors = errorWithResponse.errorFor("creditCard");
                         if (cardErrors != null) {
-                            Log.d("cardErrors != null:", gson.toJson(cardErrors));
-
+                            Log.d("cardErrors != null:", gson.toJson(cardErrors)); 
                             // Gson gson = new Gson();
                             final Map<String, String> errors = new HashMap<>();
                             BraintreeError numberError = cardErrors.errorFor("number");
@@ -266,10 +280,20 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
         PayPal.authorizeAccount(this.mBraintreeFragment);
     }
 
+    @Override
+    public void onConfigurationFetched(Configuration configuration) {
+        Log.d("Got configuration", configuration.toString());
+    }
+
     @ReactMethod
     public void getDeviceData(final ReadableMap options, final Callback successCallback) {
+        this.deviceDataCallback = successCallback;
+        this.collectDeviceData = true;
+        String env = options.getString("environment");
+
+
         if (options.hasKey("merchantId")) {
-          String merchantId = options.getString("merchantId"); 
+            String merchantId = options.getString("merchantId"); 
             DataCollector.collectDeviceData(this.mBraintreeFragment, merchantId, new BraintreeResponseListener<String>() {
                 @Override
                 public void onResponse(String deviceData) {
@@ -278,14 +302,22 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
             });
 
         } else {
-            DataCollector.collectDeviceData(this.mBraintreeFragment, new BraintreeResponseListener<String>() {
-                @Override
-                public void onResponse(String deviceData) {
-                    successCallback.invoke(null, deviceData);
-                }
-            });
+            // DataCollector.collectPayPalDeviceData(this.mBraintreeFragment, new BraintreeResponseListener<String>() {
+            //     @Override
+            //     public void onResponse(String deviceData) {
+            //         Log.d("Device Data Response", deviceData);
+            //         successCallback.invoke(null, deviceData);
+            //     }
+            // });
+            String data = DataCollector.collectDeviceData(this.mBraintreeFragment);
+
+            successCallback.invoke(null, data);
         }
+
+
     }
+
+            
 
     @Override
     public void onActivityResult(Activity activity, final int requestCode, final int resultCode, final Intent data) {
@@ -314,6 +346,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
                 break;
             }
         }
+
     }
 
     public void onNewIntent(Intent intent) {
