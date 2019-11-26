@@ -302,16 +302,22 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
             });
 
         } else {
-            // DataCollector.collectPayPalDeviceData(this.mBraintreeFragment, new BraintreeResponseListener<String>() {
-            //     @Override
-            //     public void onResponse(String deviceData) {
-            //         Log.d("Device Data Response", deviceData);
-            //         successCallback.invoke(null, deviceData);
-            //     }
-            // });
-            String data = DataCollector.collectDeviceData(this.mBraintreeFragment);
+            String type = options.getString("dataCollector");
 
-            successCallback.invoke(null, data);
+            Log.d("Data Collector type", type);
+
+            if (type.equals("paypal")) {
+                DataCollector.collectPayPalDeviceData(this.mBraintreeFragment, new BraintreeResponseListener<String>() { 
+                    @Override
+                    public void onResponse(String deviceData) {
+                        Log.d("Device Data Response", deviceData);
+                        successCallback.invoke(null, deviceData);
+                    }
+                });
+            } else {
+                String data = DataCollector.collectDeviceData(this.mBraintreeFragment); 
+                successCallback.invoke(null, data);
+            }
         }
 
 
