@@ -1,11 +1,22 @@
 'use strict';
 
-import { NativeModules } from 'react-native';
+import { NativeModules, processColor, Platform } from 'react-native';
 import { mapParameters } from './utils';
 
 const Braintree = NativeModules.Braintree;
 
 module.exports = {
+  setupWithURLScheme(token, urlscheme) {
+    return new Promise(function(resolve, reject) {
+      if (Platform.OS === 'ios') {
+          RCTBraintree.setupWithURLScheme(token, urlscheme, function(success) {
+            success == true ? resolve(true) : reject("Invalid Token");
+          });
+      } else {
+          reject('setupWithURLScheme is only available on ios devices');
+      }
+    });
+  },
   setup(token) {
     return new Promise(function(resolve, reject) {
       Braintree.setup(token, test => resolve(test), err => reject(err));
@@ -32,6 +43,10 @@ module.exports = {
 
   showPaymentViewController(config = {}) {
     var options = {
+      tintColor: Platform.OS === 'ios' ? processColor(config.tintColor) :config.tintColor,
+      bgColor: Platform.OS === 'ios' ? processColor(config.bgColor) : config.bgColor,
+      barBgColor: Platform.OS === 'ios' ? processColor(config.barBgColor) : config.barBgColor,
+      barTintColor: Platform.OS === 'ios' ? processColor(config.barTintColor): config.barTintColor,
       callToActionText: config.callToActionText,
       title: config.title,
       description: config.description,
