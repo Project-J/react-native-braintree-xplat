@@ -25,11 +25,20 @@ module.exports = {
 
   getCardNonce(parameters = {}) {
     return new Promise(function(resolve, reject) {
-      Braintree.getCardNonce(
-        mapParameters(parameters),
-        nonce => resolve(nonce),
-        err => reject(err)
-      );
+      if (Platform.OS === 'ios') {
+          try {
+              resolve(Braintree.getCardNonce(mapParameters(parameters)));
+          } catch (error) {
+              reject(error);
+          }
+      } else {
+          Braintree.getCardNonce(
+            mapParameters(parameters),
+            nonce => resolve(nonce),
+            err => reject(err)
+          );
+      }
+
     });
   },
 
@@ -53,18 +62,38 @@ module.exports = {
       amount: config.amount,
       threeDSecure: config.threeDSecure,
     };
-    return new Promise(function(resolve, reject) {
-      Braintree.paymentRequest(
-        options,
-        nonce => resolve(nonce),
-        error => reject(error)
-      );
-    });
+
+    if (Platform.OS === 'ios') {
+        return new Promise(function(resolve, reject) {
+            Braintree.showPaymentViewController(options, function(err, nonce) {
+                nonce != null ? resolve(nonce) : reject(err);
+            });
+        });
+    } else {
+        return new Promise(function(resolve, reject) {
+          Braintree.paymentRequest(
+            options,
+            nonce => resolve(nonce),
+            error => reject(error)
+          );
+        });
+    }
   },
 
   showPayPalViewController() {
     return new Promise(function(resolve, reject) {
       Braintree.paypalRequest(nonce => resolve(nonce), error => reject(error));
+    });
+  },
+  showApplePayViewController(options = {}) {
+    return new Promise(function(resolve, reject) {
+      if (Platform.OS === 'ios') {
+          Braintree.showApplePayViewController(options, function(err, nonce) {
+            nonce != null ? resolve(nonce) : reject(err);
+          });
+      } else {
+         reject('showApplePayViewController is only available on ios devices');
+      }
     });
   },
 };
