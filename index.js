@@ -9,7 +9,7 @@ module.exports = {
   setupWithURLScheme(token, urlscheme) {
     return new Promise(function(resolve, reject) {
       if (Platform.OS === 'ios') {
-          RCTBraintree.setupWithURLScheme(token, urlscheme, function(success) {
+          Braintree.setupWithURLScheme(token, urlscheme, function(success) {
             success == true ? resolve(true) : reject("Invalid Token");
           });
       } else {
