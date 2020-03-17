@@ -82,7 +82,13 @@ module.exports = {
 
   showPayPalViewController() {
     return new Promise(function(resolve, reject) {
-      Braintree.paypalRequest(nonce => resolve(nonce), error => reject(error));
+      if (Platform.OS === 'ios') {
+          Braintree.showPayPalViewController(function(err, nonce) {
+            nonce != null ? resolve(nonce) : reject(err);
+          });
+      } else {
+          Braintree.paypalRequest(nonce => resolve(nonce), error => reject(error));
+      }
     });
   },
   showApplePayViewController(options = {}) {
