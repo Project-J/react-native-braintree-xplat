@@ -113,5 +113,18 @@ module.exports = {
         );
     }
     return Braintree.googlePayAvailable();
-  }
+  },
+
+    googlePayment(price, currency) {
+        if (Platform.OS === 'ios') {
+            throw Error('Google Payments not supported on iOS');
+        }
+        return new Promise(function(resolve, reject) {
+              Braintree.googlePayment(
+                mapParameters({price, currency}),
+                nonce => resolve(nonce),
+                err => reject(err)
+              );
+        });
+    }
 };
