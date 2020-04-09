@@ -323,13 +323,19 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
     }
 
     @ReactMethod
-    public void googlePayAvailable(final Promise promise) {
-        GooglePayment.isReadyToPay(mBraintreeFragment, new BraintreeResponseListener<Boolean>() {
-            @Override
-            public void onResponse(Boolean isReadyToPay) {
-                promise.resolve(isReadyToPay);
-            }
-        });
+    public void googlePayAvailable(Promise promise) {
+        try {
+            GooglePayment.isReadyToPay(mBraintreeFragment, new BraintreeResponseListener<Boolean>() {
+                @Override
+                public void onResponse(Boolean isReadyToPay) {
+                    WritableMap map = Arguments.createMap();
+                    map.putBoolean("available", isReadyToPay);
+                    promise.resolve(map);
+                }
+            });
+        } catch (Exception e) {
+            promise.reject("GOOGLE_PAY_ERROR", e);
+        }
     }
 
     @Override
