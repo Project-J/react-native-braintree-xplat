@@ -120,8 +120,7 @@ module.exports = {
             throw Error('Google Payments not supported on iOS');
         }
         return new Promise(function(resolve, reject) {
-              Braintree.googlePayment(
-                mapParameters({price, currency}),
+              Braintree.googlePayment({price, currency},
                 nonce => resolve(nonce),
                 err => reject(err)
               );
