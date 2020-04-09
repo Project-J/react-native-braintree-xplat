@@ -33,8 +33,7 @@ import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.CardNonce;
 import com.braintreepayments.api.models.Configuration;
 import com.braintreepayments.api.models.PaymentMethodNonce;
-import com.braintreepayments.api.GooglePaymentRequest;
-import com.braintreepayments.api.TransactionInfo;
+import com.braintreepayments.api.models.GooglePaymentRequest;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
@@ -46,6 +45,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 
+import com.google.android.gms.wallet.TransactionInfo;
 
 public class Braintree extends ReactContextBaseJavaModule implements ActivityEventListener, ConfigurationListener {
     private static final int PAYMENT_REQUEST = 1706816330;
