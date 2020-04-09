@@ -3,11 +3,30 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
   },
   "dependencies": {
-    "react": "15.2.0-rc.1",
-    "react-native": "0.29.0-rc.0",
-    "react-native-braintree-xplat": "file:../"
+    "react": "16.11.0",
+    "react-native": "0.62.2",
+    "react-native-braintree-xplat": "file:.."
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/runtime": "^7.9.2",
+    "@react-native-community/eslint-config": "^1.0.0",
+    "babel-jest": "^25.3.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^25.3.0",
+    "metro-react-native-babel-preset": "^0.59.0",
+    "prettier": "^2.0.4",
+    "react-test-renderer": "16.11.0"
+  },
+  "jest": {
+    "preset": "react-native"
   }
 }

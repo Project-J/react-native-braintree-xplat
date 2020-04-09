@@ -101,5 +101,18 @@ module.exports = {
          reject('showApplePayViewController is only available on ios devices');
       }
     });
+
   },
+
+  googlePayAvailable() {
+    return new Promise(function (resolve) {
+        if (Platform.OS === 'ios') {
+            resolve(false);
+            return;
+        }
+        Braintree.googlePayAvailable(function (_, available) {
+            resolve(available);
+        });
+    });
+  }
 };

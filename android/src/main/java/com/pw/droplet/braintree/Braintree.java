@@ -7,38 +7,38 @@ import android.util.Log;
 
 import android.net.Uri;
 
-import com.braintreepayments.api.interfaces.BraintreeCancelListener;
-import com.braintreepayments.api.interfaces.ConfigurationListener;
 import com.google.gson.Gson;
 
-import android.content.Intent;
-import android.content.Context;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 
-
-import com.braintreepayments.api.ThreeDSecure;
-import com.braintreepayments.api.PaymentRequest;
-import com.braintreepayments.api.models.PaymentMethodNonce;
-import com.braintreepayments.api.BraintreePaymentActivity;
 import com.braintreepayments.api.BraintreeFragment;
-import com.braintreepayments.api.exceptions.InvalidArgumentException;
+import com.braintreepayments.api.BraintreePaymentActivity;
+import com.braintreepayments.api.Card;
+import com.braintreepayments.api.DataCollector;
+import com.braintreepayments.api.GooglePayment;
+import com.braintreepayments.api.PayPal;
+import com.braintreepayments.api.PaymentRequest;
+import com.braintreepayments.api.ThreeDSecure;
 import com.braintreepayments.api.exceptions.BraintreeError;
 import com.braintreepayments.api.exceptions.ErrorWithResponse;
-import com.braintreepayments.api.models.CardBuilder;
-import com.braintreepayments.api.Card;
-import com.braintreepayments.api.PayPal;
-import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
+import com.braintreepayments.api.exceptions.InvalidArgumentException;
+import com.braintreepayments.api.interfaces.BraintreeCancelListener;
 import com.braintreepayments.api.interfaces.BraintreeErrorListener;
-import com.braintreepayments.api.models.CardNonce;
-import com.braintreepayments.api.DataCollector;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
+import com.braintreepayments.api.interfaces.ConfigurationListener;
+import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
+import com.braintreepayments.api.models.CardBuilder;
+import com.braintreepayments.api.models.CardNonce;
 import com.braintreepayments.api.models.Configuration;
+import com.braintreepayments.api.models.PaymentMethodNonce;
 
+import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.ReadableMap;
 
 
@@ -319,11 +319,17 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
                 successCallback.invoke(null, data);
             }
         }
-
-
     }
 
-            
+    @ReactMethod
+    public void googlePayAvailable(final Callback successCallback) {
+        GooglePayment.isReadyToPay(mBraintreeFragment, new BraintreeResponseListener<Boolean>() {
+            @Override
+            public void onResponse(Boolean isReadyToPay) {
+                successCallback.invoke(null, isReadyToPay);
+            }
+        });
+    }
 
     @Override
     public void onActivityResult(Activity activity, final int requestCode, final int resultCode, final Intent data) {

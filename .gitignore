@@ -11,3 +11,6 @@ gradle/
 *.iml
 npm-debug.log
 .DS_Store
+example/android/**/*
+exmaple/ios/**/*
+example/node_modules/**/*
