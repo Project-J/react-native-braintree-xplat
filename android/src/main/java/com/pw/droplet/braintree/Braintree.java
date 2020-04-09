@@ -357,7 +357,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
             .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
             .setCurrencyCode(currency)
             .build())
-            .billngAddressRequired(true);
+            .billingAddressRequired(true);
 
         GooglePayment.requestPayment(mBraintreeFragment, googlePaymentRequest);
     }
