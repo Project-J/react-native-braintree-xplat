@@ -46,6 +46,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 
 import com.google.android.gms.wallet.TransactionInfo;
+import com.google.android.gms.wallet.WalletConstants;
 
 public class Braintree extends ReactContextBaseJavaModule implements ActivityEventListener, ConfigurationListener {
     private static final int PAYMENT_REQUEST = 1706816330;
