@@ -33,6 +33,8 @@ import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.CardNonce;
 import com.braintreepayments.api.models.Configuration;
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.braintreepayments.api.GooglePaymentRequest;
+import com.braintreepayments.api.TransactionInfo;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
@@ -338,6 +340,25 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
         } catch (Exception e) {
             promise.reject("GOOGLE_PAY_ERROR", e);
         }
+    }
+
+    @ReactMethod
+    public void googlePayment(final ReadableMap options, final Callback successCallback, final Callback errorCallback) {
+        this.successCallback = successCallback;
+        this.errorCallback = errorCallback;
+
+        String price = options.getString("price");
+        String currency = options.getString("currency");
+
+        GooglePaymentRequest googlePaymentRequest = new GooglePaymentRequest()
+            .transactionInfo(TransactionInfo.newBuilder()
+            .setTotalPrice(price)
+            .setTotalPriceStatus(WalletConstant.TOTLA_PRICE_STATUS_FINAL)
+            .setCurrencyCode(currency)
+            .build())
+            .billngAddressRequired(true);
+
+        GooglePayment.requestPayment(mBraintreeFragment, googlePaymentRequest);
     }
 
     @Override
