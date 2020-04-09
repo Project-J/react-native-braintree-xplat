@@ -40,6 +40,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.Promise;
 
 
 public class Braintree extends ReactContextBaseJavaModule implements ActivityEventListener, ConfigurationListener {
@@ -322,11 +323,11 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
     }
 
     @ReactMethod
-    public void googlePayAvailable(final Callback successCallback) {
+    public void googlePayAvailable(final Promise promise) {
         GooglePayment.isReadyToPay(mBraintreeFragment, new BraintreeResponseListener<Boolean>() {
             @Override
             public void onResponse(Boolean isReadyToPay) {
-                successCallback.invoke(null, isReadyToPay);
+                promise.resolve(isReadyToPay);
             }
         });
     }
