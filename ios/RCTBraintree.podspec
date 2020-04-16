@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.dependency 'BraintreeDropIn'
   s.dependency 'Braintree/PayPal'
   s.dependency 'Braintree/Apple-Pay', '4.32.1'
-  s.dependency 'Braintree/3D-Secure'
   s.dependency 'Braintree/DataCollector'
+  s.dependency 'Braintree/PaymentFlow'
   s.dependency 'React'
 end
