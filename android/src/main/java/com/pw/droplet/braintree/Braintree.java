@@ -8,12 +8,15 @@ import android.util.Log;
 
 import com.braintreepayments.api.interfaces.BraintreeCancelListener;
 import com.braintreepayments.api.interfaces.ConfigurationListener;
+import com.braintreepayments.api.models.PayPalRequest;
 import com.google.gson.Gson;
 
 import android.content.Intent;
 import android.content.Context;
 import android.app.Activity;
 
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.BraintreeFragment;
@@ -79,7 +82,8 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
     public void setup(final String token, final Callback successCallback, final Callback errorCallback) {
         Log.d("Fragment setup", token);
         try {
-            this.mBraintreeFragment = BraintreeFragment.newInstance(getCurrentActivity(), token);
+            AppCompatActivity currentActivity = (AppCompatActivity) getCurrentActivity();
+            this.mBraintreeFragment = BraintreeFragment.newInstance(currentActivity, token);
 
             this.mBraintreeFragment.addListener(new BraintreeCancelListener() {
                 @Override
@@ -193,7 +197,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
         if (parameters.hasKey("company"))
             cardBuilder.company(parameters.getString("company"));
 
-        if (parameters.hasKey("countryName"))
+        /*if (parameters.hasKey("countryName"))
             cardBuilder.countryName(parameters.getString("countryName"));
 
         if (parameters.hasKey("countryCodeAlpha2"))
@@ -204,6 +208,8 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
 
         if (parameters.hasKey("countryCodeNumeric"))
             cardBuilder.countryCodeNumeric(parameters.getString("countryCodeNumeric"));
+
+         */
 
         if (parameters.hasKey("locality"))
             cardBuilder.locality(parameters.getString("locality"));
@@ -235,7 +241,8 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
     public void paypalRequest(final Callback successCallback, final Callback errorCallback) {
         this.successCallback = successCallback;
         this.errorCallback = errorCallback;
-        PayPal.authorizeAccount(this.mBraintreeFragment);
+        PayPalRequest request = new PayPalRequest();
+        PayPal.requestBillingAgreement(this.mBraintreeFragment, request);
     }
 
     @Override
@@ -273,8 +280,12 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
                     }
                 });
             } else {
-                String data = DataCollector.collectDeviceData(this.mBraintreeFragment);
-                successCallback.invoke(null, data);
+                DataCollector.collectDeviceData(this.mBraintreeFragment, new BraintreeResponseListener<String>() {
+                    @Override
+                    public void onResponse(String deviceData) {
+                        successCallback.invoke(null, deviceData);
+                    }
+                });
             }
         }
 
