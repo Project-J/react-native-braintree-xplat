@@ -60,7 +60,6 @@ module.exports = {
       title: config.title,
       description: config.description,
       amount: config.amount,
-      threeDSecure: config.threeDSecure,
     };
 
     if (Platform.OS === 'ios') {
