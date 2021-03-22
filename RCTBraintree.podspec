@@ -7,11 +7,11 @@ Pod::Spec.new do |s|
   s.version = package['version']
   s.summary = package['description']
   s.description = package['description']
-  s.homepage = 'https://github.com/wkoutre/react-native-braintree-xplat.git'
+  s.homepage = 'https://github.com/CodeFishStudio/react-native-braintree-xplat.git'
   s.license = package['license']
   s.author = { 'Nick Koutrelakos' => 'nick@stadiumgoods.com' }
   s.platform = :ios, '10.0'
-  s.source = { :git => 'https://github.com/wkoutre/react-native-braintree-xplat.git', :tag => 'master' }
+  s.source = { :git => 'https://github.com/CodeFishStudio/react-native-braintree-xplat.git', :tag => 'master' }
   s.source_files = 'ios/**/*.{h,m}'
   s.requires_arc = true
 

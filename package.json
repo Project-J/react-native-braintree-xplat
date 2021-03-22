@@ -1,6 +1,6 @@
 {
   "name": "react-native-braintree-xplat",
-  "version": "4.2.4",
+  "version": "4.2.5",
   "description": "Cross platform Braintree module",
   "main": "index",
   "author": {
@@ -8,9 +8,32 @@
     "email": "rickard@swiftpulse.com",
     "url": "https://github.com/kraffslol"
   },
+  "contributors": [
+    {
+      "name": "CodeFish Studio",
+      "email": "tech@codefishstudio.com",
+      "url": "https://codefish.studio"
+    },
+  ],
   "license": "MIT",
   "respository": {
     "type": "git",
     "url": "git@github.com:CodeFishStudio/react-native-braintree-xplat.git"
-  }
+  },
+  "homepage": "https://github.com/CodeFishStudio/react-native-braintree-xplat#readme",
+  "files": [
+    "android/",
+    "ios/",
+    "RCTBraintree.podspec"
+  ],
+  "keywords": [
+    "react-component",
+    "react-native",
+    "ios",
+    "android",
+    "device",
+    "braintree",
+    "paypal",
+    "cocoapod"
+  ]
 }
