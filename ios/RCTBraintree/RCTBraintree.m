@@ -12,6 +12,11 @@
     bool runCallback;
 }
 
++ (BOOL)requiresMainQueueSetup
+{
+    return YES;
+}
+
 static NSString *URLScheme;
 
 + (instancetype)sharedInstance {
