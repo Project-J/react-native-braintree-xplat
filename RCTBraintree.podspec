@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.author = { 'Nick Koutrelakos' => 'nick@stadiumgoods.com' }
   s.platform = :ios, '10.0'
   s.source = { :git => 'https://github.com/wkoutre/react-native-braintree-xplat.git', :tag => 'master' }
-  s.source_files = 'RCTBraintree/**/*.{h,m}'
+  s.source_files = 'ios/**/*.{h,m}'
   s.requires_arc = true
 
   s.ios.deployment_target = '10.0'
