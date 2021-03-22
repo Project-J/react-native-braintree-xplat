@@ -1,6 +1,6 @@
 {
   "name": "react-native-braintree-xplat",
-  "version": "4.2.8",
+  "version": "4.2.9",
   "description": "Cross platform Braintree module",
   "main": "index.js",
   "author": {
